@@ -1,15 +1,14 @@
 /* tslint:disable:no-unused-variable */
 import * as React from 'react';
 /* tslint:disable:no-unused-variable */
-import { css } from 'office-ui-fabric-react';
 
-import styles from '../SearchSpfx.module.scss';
 import { ISearchSpfxWebPartProps } from '../ISearchSpfxWebPartProps';
 import { IWebPartContext } from '@microsoft/sp-client-preview';
-import { ICells } from '../utils/ISearchResults';
 
 import searchActions from '../flux/actions/searchActions';
 import searchStore from '../flux/stores/searchStore';
+
+import TemplateLoader from '../templates/TemplateLoader';
 
 export interface ISearchSpfxProps extends ISearchSpfxWebPartProps {
 	context: IWebPartContext;
@@ -17,34 +16,60 @@ export interface ISearchSpfxProps extends ISearchSpfxWebPartProps {
 }
 
 export interface ISearchState {
-	results: any[];
-	loaded: Boolean;
+	results?: any[];
+	loaded?: Boolean;
+	component?: any;
+	template?: string;
 }
 
 export default class SearchSpfx extends React.Component<ISearchSpfxProps, ISearchState> {
+	private loader: TemplateLoader = new TemplateLoader();
+
 	constructor(props: ISearchSpfxProps, context: IWebPartContext) {
 		super(props, context);
 		this.state = {
 			results: [],
-			loaded: false
+			loaded: false,
+			component: null,
+			template: ""
 		};
 		this._onChange = this._onChange.bind(this);
 	};
 
-    private componentDidMount(): void {
+	public componentWillMount(): void {
+		this.loader.getComponent(this.props.template).then((component) => {
+			this.setState({
+				template: this.props.template,
+				component: component
+			});
+		});
+	}
+
+    public componentDidMount(): void {
         searchStore.addChangeListener(this._onChange);
-		searchActions.get(this.props.context, this.props.query, this.props.fields);
+		searchActions.get(this.props.context, this.props.query, this.loader.getTemplateMappings(this.props.template));
     }
 
-    private componentWillUnmount(): void {
+    public componentWillUnmount(): void {
         searchStore.removeChangeListener(this._onChange);
     }
 
-	private componentWillReceiveProps(nextProps: ISearchSpfxProps): void {
-		searchActions.get(nextProps.context, nextProps.query, nextProps.fields);
+	public componentWillReceiveProps(nextProps: ISearchSpfxProps): void {
+		// Get the new results
+		searchActions.get(nextProps.context, nextProps.query, this.loader.getTemplateMappings(nextProps.template));
 	}
 
 	private _onChange(): void {
+		// Check if another template needs to be loaded
+		if (this.state.template !== this.props.template) {
+			this.loader.getComponent(this.props.template).then((component) => {
+				this.setState({
+					template: this.props.template,
+					component: component
+				});
+			});
+		}
+
         this.setState({
 			results: searchStore.getSearchResults(),
 			loaded: true
@@ -60,16 +85,13 @@ export default class SearchSpfx extends React.Component<ISearchSpfxProps, ISearc
 					</div>
 				);
 			} else {
-				return (
-					<div className={styles.container}>
-						<h1>Search results for query: {this.props.query}</h1>
-						{
-							this.state.results.map((result, index) => {
-								return (<p key={index}>Result {index}: <a href={result.Path}>{result.Title}</a></p>);
-							})
-						}
-					</div>
-				);
+				// Load the template
+				if (this.state.component !== null) {
+					/* tslint:disable:variable-name */
+					const CrntComponent: any = this.state.component;
+					/* tslint:disable:variable-name */
+					return <CrntComponent {...this.props} results={this.state.results} />;
+				}
 			}
 		} else {
 			return (<div />);

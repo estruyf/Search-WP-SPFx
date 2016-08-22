@@ -1,7 +1,13 @@
 # Search-WP-SPFx
 Search Web Part built with the SharePoint Framework, React and Flux.
 
-![Search web part sample](https://github.com/estruyf/Search-WP-SPFx/blob/master/images/search-wp-spfx.gif?raw=true)
+In the properties pane you can specify the query and template you want to use.
+
+All templates need to be created in the `src/webparts/searchSpfx/templates` folder. Start with a copy of one of the existing ones. The Managed Properties you want to use need to be specified in the **TemplateLoader.ts** file and should be provided in the following format:
+
+```{ key: 'DefaultTemplate', text: 'Default template', mappings: 'Path,Title' }```
+
+![Search web part sample](https://github.com/estruyf/Search-WP-SPFx/blob/master/images/search-wp-spfx-updates-UI.gif?raw=true)
 
 ## Using this web part
 *Info: This web part can only be tested on a developer site at the moment. Currently there is no mock store created.*

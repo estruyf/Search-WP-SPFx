@@ -14,8 +14,8 @@
     "officeFabricIconFontName": "Search",
     "properties": {
       "description": "SearchSpfx",
-      "query": "title:test",
-      "fields": "Path,Title"
+      "query": "*",
+      "template": "DefaultTemplate"
     }
   }]
 }

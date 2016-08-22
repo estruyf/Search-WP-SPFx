@@ -84,6 +84,8 @@ appDispatcher.register((action) => {
 			} else {
 				url += "'path,title'";
 			}
+			// Add the client type
+			url += "&clienttype='ContentSearchRegular'";
 
 			searchStore.GetSearchData(action.context, url).then((res: ISearchResults) => {
 				if (res !== null) {

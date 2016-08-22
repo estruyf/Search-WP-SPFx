@@ -4,6 +4,7 @@ declare interface IStrings {
   DescriptionFieldLabel: string;
   QueryFieldLabel: string;
   FieldsFieldLabel: string;
+  FieldsTemplateLabel: string;
 }
 
 declare module 'mystrings' {

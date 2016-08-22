@@ -4,12 +4,15 @@ import {
 	BaseClientSideWebPart,
 	IPropertyPaneSettings,
 	IWebPartContext,
-	PropertyPaneTextField
+	PropertyPaneTextField,
+	PropertyPaneDropdown
 } from '@microsoft/sp-client-preview';
 
 import * as strings from 'mystrings';
 import SearchSpfx, { ISearchSpfxProps } from './components/SearchSpfx';
 import { ISearchSpfxWebPartProps } from './ISearchSpfxWebPartProps';
+
+import {allTemplates} from './templates/TemplateLoader';
 
 export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfxWebPartProps> {
 	public constructor(context: IWebPartContext) {
@@ -20,9 +23,9 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 		const element: React.ReactElement<ISearchSpfxProps> = React.createElement(SearchSpfx, {
 			description: this.properties.description,
 			query: this.properties.query,
-			fields: this.properties.fields,
 			context: this.context,
-			firstRender: this.renderedOnce
+			firstRender: this.renderedOnce,
+			template: this.properties.template
 		});
 
 		ReactDom.render(element, this.domElement);
@@ -43,8 +46,9 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 						PropertyPaneTextField('query', {
 							label: strings.QueryFieldLabel
 						}),
-						PropertyPaneTextField('fields', {
-							label: strings.FieldsFieldLabel
+						PropertyPaneDropdown('template', {
+							label: strings.FieldsTemplateLabel,
+							options: allTemplates
 						})
 					]
 				}]

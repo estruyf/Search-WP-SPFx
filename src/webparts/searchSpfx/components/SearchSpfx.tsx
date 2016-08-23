@@ -47,7 +47,7 @@ export default class SearchSpfx extends React.Component<ISearchSpfxProps, ISearc
 
     public componentDidMount(): void {
         searchStore.addChangeListener(this._onChange);
-		searchActions.get(this.props.context, this.props.query, this.loader.getTemplateMappings(this.props.template));
+		searchActions.get(this.props.context, this.props.query, this.props.maxResults, this.props.sorting, this.loader.getTemplateMappings(this.props.template));
     }
 
     public componentWillUnmount(): void {
@@ -56,7 +56,7 @@ export default class SearchSpfx extends React.Component<ISearchSpfxProps, ISearc
 
 	public componentWillReceiveProps(nextProps: ISearchSpfxProps): void {
 		// Get the new results
-		searchActions.get(nextProps.context, nextProps.query, this.loader.getTemplateMappings(nextProps.template));
+		searchActions.get(nextProps.context, nextProps.query, nextProps.maxResults, nextProps.sorting, this.loader.getTemplateMappings(nextProps.template));
 	}
 
 	private _onChange(): void {

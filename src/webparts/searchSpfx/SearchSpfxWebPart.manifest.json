@@ -15,7 +15,9 @@
     "properties": {
       "description": "SearchSpfx",
       "query": "*",
-      "template": "DefaultTemplate"
+      "template": "DefaultTemplate",
+      "maxResults": 10,
+      "sorting": ""
     }
   }]
 }

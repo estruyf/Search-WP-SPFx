@@ -7,11 +7,13 @@ export class SearchActionsStatic {
 	 * @param  {string} query
 	 * @param  {string} fields
 	 */
-	public get(context: IWebPartContext, query: string, fields?: string): void {
+	public get(context: IWebPartContext, query: string, maxResults: number, sorting: string, fields?: string): void {
 		appDispatcher.dispatch({
 			actionType: searchActionIDs.SEARCH_GET,
 			context: context,
 			query: query,
+			maxResults: maxResults,
+			sorting: sorting,
 			fields: fields
 		});
 	}

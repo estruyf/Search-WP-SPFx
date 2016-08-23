@@ -5,7 +5,8 @@ import {
 	IPropertyPaneSettings,
 	IWebPartContext,
 	PropertyPaneTextField,
-	PropertyPaneDropdown
+	PropertyPaneDropdown,
+	PropertyPaneSlider
 } from '@microsoft/sp-client-preview';
 
 import * as strings from 'mystrings';
@@ -23,6 +24,8 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 		const element: React.ReactElement<ISearchSpfxProps> = React.createElement(SearchSpfx, {
 			description: this.properties.description,
 			query: this.properties.query,
+			maxResults: this.properties.maxResults,
+			sorting: this.properties.sorting,
 			context: this.context,
 			firstRender: this.renderedOnce,
 			template: this.properties.template
@@ -40,11 +43,16 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 				groups: [{
 					groupName: strings.BasicGroupName,
 					groupFields: [
-						PropertyPaneTextField('description', {
-							label: strings.DescriptionFieldLabel
-						}),
 						PropertyPaneTextField('query', {
 							label: strings.QueryFieldLabel
+						}),
+						PropertyPaneSlider('maxResults', {
+							label: strings.FieldsMaxResults,
+							min: 1,
+							max: 50
+						}),
+						PropertyPaneTextField('sorting', {
+							label: strings.FieldsSorting
 						}),
 						PropertyPaneDropdown('template', {
 							label: strings.FieldsTemplateLabel,

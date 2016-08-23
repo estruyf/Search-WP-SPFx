@@ -63,6 +63,20 @@ export class SearchStoreStatic extends EventEmitter {
 			return res.json();
 		});
 	}
+
+	/**
+	 * @param {string} value
+	 */
+	public isEmptyString (value: string): boolean {
+		return value === null || typeof value === "undefined" || !value.length;
+	}
+
+	/**
+	 * @param {any} value
+	 */
+	public isNull (value: any): boolean {
+		return value === null || typeof value === "undefined";
+	}
 }
 
 const searchStore: SearchStoreStatic = new SearchStoreStatic();
@@ -72,18 +86,15 @@ appDispatcher.register((action) => {
 		case searchActionIDs.SEARCH_GET:
 			let url: string = action.context.pageContext.web.absoluteUrl + "/_api/search/query?querytext=";
 			// Check if a query is provided
-			if (action.query !== null && action.query !== "") {
-				url += `'${action.query}'`;
-			} else {
-				url += "'*'";
-			}
+			url += !searchStore.isEmptyString(action.query) ? `'${action.query}'` : "'*'";
 			// Check if there are fields provided
 			url += '&selectproperties=';
-			if (action.fields !== null && action.fields !== "") {
-				url += `'${action.fields}'`;
-			} else {
-				url += "'path,title'";
-			}
+			url += !searchStore.isEmptyString(action.fields) ? `'${action.fields}'` : "'path,title'";
+			// Add the rowlimit
+			url += "&rowlimit=";
+			url += !searchStore.isNull(action.maxResults) ? action.maxResults : 10;
+			// Add sorting
+			url += !searchStore.isEmptyString(action.sorting) ? `&sortlist='${action.sorting}'` : "";
 			// Add the client type
 			url += "&clienttype='ContentSearchRegular'";
 

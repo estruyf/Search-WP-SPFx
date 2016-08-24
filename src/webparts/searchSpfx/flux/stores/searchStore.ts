@@ -59,7 +59,13 @@ export class SearchStoreStatic extends EventEmitter {
 	 * @param {string} url
 	 */
 	public GetSearchData (context: IWebPartContext, url: string): Promise<ISearchResults> {
-		return context.httpClient.get(url).then((res: Response) => {
+		return context.httpClient.get(url, {
+			headers: {
+				// Some users experience issues retrieving search results: https://github.com/SharePoint/sp-dev-docs/issues/44
+				// Current fix is to set an empty odata-version header
+				"odata-version": ""
+			}
+		}).then((res: Response) => {
 			return res.json();
 		});
 	}

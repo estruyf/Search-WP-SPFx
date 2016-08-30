@@ -44,7 +44,8 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 					groupName: strings.BasicGroupName,
 					groupFields: [
 						PropertyPaneTextField('query', {
-							label: strings.QueryFieldLabel
+							label: strings.QueryFieldLabel,
+							multiline: true
 						}),
 						PropertyPaneSlider('maxResults', {
 							label: strings.FieldsMaxResults,

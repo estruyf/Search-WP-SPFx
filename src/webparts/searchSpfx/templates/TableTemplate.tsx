@@ -2,7 +2,7 @@
 import * as React from 'react';
 /* tslint:disable:no-unused-variable */
 import { css } from 'office-ui-fabric-react/';
-import "node_modules/office-ui-fabric/dist/css/fabric.components.css";
+import ModuleLoader from '@microsoft/sp-module-loader';
 
 import styles from '../SearchSpfx.module.scss';
 import { ISearchSpfxWebPartProps } from '../ISearchSpfxWebPartProps';
@@ -35,6 +35,9 @@ export default class TableTemplate extends React.Component<ITableTemplate, {}> {
 	}
 
 	public render(): JSX.Element {
+		// Load the Office UI Fabrics components css file via the module loader
+    	ModuleLoader.loadCss('https://appsforoffice.microsoft.com/fabric/2.6.1/fabric.components.min.css');
+
 		return (
 			<div className={styles.searchSpfx}>
 				<h1 className='ms-font-xxl'>Results rendered in a table. Query: {this.props.query}</h1>

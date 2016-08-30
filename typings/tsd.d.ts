@@ -20,3 +20,4 @@
 /// <reference path="immutable/immutable.d.ts" />
 /// <reference path="object-assign/object-assign.d.ts" />
 /// <reference path="form-data/form-data.d.ts" />
+/// <reference path="combokeys/combokeys.d.ts" />

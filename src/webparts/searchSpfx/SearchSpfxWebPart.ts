@@ -26,49 +26,46 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 		super(context);
 	}
 
+	private _getElement(externalTemplate?: IExternalTemplate): React.ReactElement<ISearchSpfxProps> {
+		return React.createElement(SearchSpfx, {
+			title: this.properties.title,
+			query: this.properties.query,
+			maxResults: this.properties.maxResults,
+			sorting: this.properties.sorting,
+			context: this.context,
+			firstRender: this.renderedOnce,
+			template: this.properties.template,
+			externalTemplate: externalTemplate
+		});
+	}
+
 	public render(): void {
 		if (this.properties.external) {
 			// Loading external template
 			ModuleLoader.loadScript(this.properties.externalUrl, "externalTemplate").then((externalTemplate: IExternalTemplate): void => {
 				// Rendering from the external template
-				const element: React.ReactElement<ISearchSpfxProps> = React.createElement(SearchSpfx, {
-					title: this.properties.title,
-					query: this.properties.query,
-					maxResults: this.properties.maxResults,
-					sorting: this.properties.sorting,
-					context: this.context,
-					firstRender: this.renderedOnce,
-					template: this.properties.template,
-					externalTemplate: externalTemplate
-				});
-
+				const element = this._getElement(externalTemplate);
 				ReactDom.render(element, this.domElement);
 			}).catch((error) => {
 				console.log('ERROR: ', error);
 			});
 		} else {
 			// Render from internal template
-			const element: React.ReactElement<ISearchSpfxProps> = React.createElement(SearchSpfx, {
-				title: this.properties.title,
-				query: this.properties.query,
-				maxResults: this.properties.maxResults,
-				sorting: this.properties.sorting,
-				context: this.context,
-				firstRender: this.renderedOnce,
-				template: this.properties.template
-			});
-
+			const element = this._getElement();
 			ReactDom.render(element, this.domElement);
 		}
 	}
 
 	protected get propertyPaneSettings(): IPropertyPaneSettings {
+		// Default template property
 		let templateProperty: any = PropertyPaneDropdown('template', {
 			label: strings.FieldsTemplateLabel,
 			options: allTemplates
 		});
 
+		// Check if you want to load an external template
 		if (this.properties.external) {
+			// Show the external URL property instead of the internal template property
 			templateProperty = PropertyPaneTextField('externalUrl', {
 				label: strings.FieldsExternalTempLabel
 			});

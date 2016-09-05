@@ -1,7 +1,4 @@
-/* tslint:disable:no-unused-variable */
 import * as React from 'react';
-/* tslint:disable:no-unused-variable */
-import { css } from 'office-ui-fabric-react';
 
 import styles from '../SearchSpfx.module.scss';
 import { ISearchSpfxWebPartProps } from '../ISearchSpfxWebPartProps';

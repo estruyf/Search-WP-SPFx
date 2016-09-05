@@ -6,14 +6,20 @@ import {
 	IWebPartContext,
 	PropertyPaneTextField,
 	PropertyPaneDropdown,
-	PropertyPaneSlider
+	PropertyPaneSlider,
+	PropertyPaneToggle
 } from '@microsoft/sp-client-preview';
+
+import ModuleLoader from '@microsoft/sp-module-loader';
 
 import * as strings from 'mystrings';
 import SearchSpfx, { ISearchSpfxProps } from './components/SearchSpfx';
 import { ISearchSpfxWebPartProps } from './ISearchSpfxWebPartProps';
+import { IExternalTemplate } from './utils/ITemplates';
+import { allTemplates } from './templates/TemplateLoader';
 
-import {allTemplates} from './templates/TemplateLoader';
+// Expose React to window -> required for external template loading
+require("expose?React!react");
 
 export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfxWebPartProps> {
 	public constructor(context: IWebPartContext) {
@@ -21,20 +27,53 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 	}
 
 	public render(): void {
-		const element: React.ReactElement<ISearchSpfxProps> = React.createElement(SearchSpfx, {
-			description: this.properties.description,
-			query: this.properties.query,
-			maxResults: this.properties.maxResults,
-			sorting: this.properties.sorting,
-			context: this.context,
-			firstRender: this.renderedOnce,
-			template: this.properties.template
-		});
+		if (this.properties.external) {
+			// Loading external template
+			ModuleLoader.loadScript(this.properties.externalUrl, "externalTemplate").then((externalTemplate: IExternalTemplate): void => {
+				// Rendering from the external template
+				const element: React.ReactElement<ISearchSpfxProps> = React.createElement(SearchSpfx, {
+					title: this.properties.title,
+					query: this.properties.query,
+					maxResults: this.properties.maxResults,
+					sorting: this.properties.sorting,
+					context: this.context,
+					firstRender: this.renderedOnce,
+					template: this.properties.template,
+					externalTemplate: externalTemplate
+				});
 
-		ReactDom.render(element, this.domElement);
+				ReactDom.render(element, this.domElement);
+			}).catch((error) => {
+				console.log('ERROR: ', error);
+			});
+		} else {
+			// Render from internal template
+			const element: React.ReactElement<ISearchSpfxProps> = React.createElement(SearchSpfx, {
+				title: this.properties.title,
+				query: this.properties.query,
+				maxResults: this.properties.maxResults,
+				sorting: this.properties.sorting,
+				context: this.context,
+				firstRender: this.renderedOnce,
+				template: this.properties.template
+			});
+
+			ReactDom.render(element, this.domElement);
+		}
 	}
 
 	protected get propertyPaneSettings(): IPropertyPaneSettings {
+		let templateProperty: any = PropertyPaneDropdown('template', {
+			label: strings.FieldsTemplateLabel,
+			options: allTemplates
+		});
+
+		if (this.properties.external) {
+			templateProperty = PropertyPaneTextField('externalUrl', {
+				label: strings.FieldsExternalTempLabel
+			});
+		}
+
 		return {
 			pages: [{
 				header: {
@@ -43,8 +82,12 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 				groups: [{
 					groupName: strings.BasicGroupName,
 					groupFields: [
+						PropertyPaneTextField('title', {
+							label: strings.FieldsTitleLabel
+						}),
 						PropertyPaneTextField('query', {
 							label: strings.QueryFieldLabel,
+							description: strings.QueryInfoDescription,
 							multiline: true
 						}),
 						PropertyPaneSlider('maxResults', {
@@ -55,10 +98,10 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 						PropertyPaneTextField('sorting', {
 							label: strings.FieldsSorting
 						}),
-						PropertyPaneDropdown('template', {
-							label: strings.FieldsTemplateLabel,
-							options: allTemplates
-						})
+						PropertyPaneToggle('external', {
+							label: strings.FieldsExternalLabel
+						}),
+						templateProperty
 					]
 				}]
 			}]

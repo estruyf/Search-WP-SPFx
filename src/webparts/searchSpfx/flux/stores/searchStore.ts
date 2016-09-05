@@ -4,6 +4,9 @@ import { EventEmitter } from 'events';
 
 import { IWebPartContext } from '@microsoft/sp-client-preview';
 import { ISearchResults, ICells, ICellValue } from '../../utils/ISearchResults';
+import { IPageContext } from '../../utils/IPageContext';
+
+declare const _spPageContextInfo: IPageContext;
 
 const CHANGE_EVENT: string = 'change';
 
@@ -71,6 +74,19 @@ export class SearchStoreStatic extends EventEmitter {
 	}
 
 	/**
+	 * @param {string} query
+	 */
+	public ReplaceTokens (query: string, context: IWebPartContext): string {
+		if (query.indexOf("{Site}") !== -1) {
+			query = query.replace("{Site}", context.pageContext.web.absoluteUrl);
+		}
+		if (query.indexOf("{SiteCollection}") !== -1) {
+			query = query.replace("{SiteCollection}", _spPageContextInfo.siteAbsoluteUrl);
+		}
+		return query;
+	}
+
+	/**
 	 * @param {string} value
 	 */
 	public isEmptyString (value: string): boolean {
@@ -92,7 +108,7 @@ appDispatcher.register((action) => {
 		case searchActionIDs.SEARCH_GET:
 			let url: string = action.context.pageContext.web.absoluteUrl + "/_api/search/query?querytext=";
 			// Check if a query is provided
-			url += !searchStore.isEmptyString(action.query) ? `'${action.query}'` : "'*'";
+			url += !searchStore.isEmptyString(action.query) ? `'${searchStore.ReplaceTokens(action.query, action.context)}'` : "'*'";
 			// Check if there are fields provided
 			url += '&selectproperties=';
 			url += !searchStore.isEmptyString(action.fields) ? `'${action.fields}'` : "'path,title'";

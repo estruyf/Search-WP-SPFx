@@ -1,7 +1,5 @@
-/* tslint:disable:no-unused-variable */
 import * as React from 'react';
-/* tslint:disable:no-unused-variable */
-import { css } from 'office-ui-fabric-react/';
+import { css } from 'office-ui-fabric-react';
 import ModuleLoader from '@microsoft/sp-module-loader';
 
 import styles from '../SearchSpfx.module.scss';
@@ -40,7 +38,15 @@ export default class TableTemplate extends React.Component<ITableTemplate, {}> {
 
 		return (
 			<div className={styles.searchSpfx}>
-				<h1 className='ms-font-xxl'>Results rendered in a table. Query: {this.props.query}</h1>
+				{
+					(() => {
+						// Check if you need to show a title
+						if (this.props.title !== "") {
+							return <h1 className='ms-font-xxl'>{this.props.title}</h1>;
+						}
+					})()
+				}
+
 				<table className={css('ms-Table', styles.templateTable)}>
 					<thead>
 						<tr>

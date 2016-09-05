@@ -3,3 +3,8 @@ export interface ITemplates {
 	text: string;
 	mappings: string;
 }
+
+export interface IExternalTemplate {
+	properties: ITemplates;
+	component: Function;
+}

@@ -13,11 +13,13 @@
     "description": { "default": "Search web part built with SPFx" },
     "officeFabricIconFontName": "Search",
     "properties": {
-      "description": "SearchSpfx",
+      "title": "",
       "query": "*",
       "template": "DefaultTemplate",
       "maxResults": 10,
-      "sorting": ""
+      "sorting": "",
+      "external": false,
+      "externalUrl": ""
     }
   }]
 }

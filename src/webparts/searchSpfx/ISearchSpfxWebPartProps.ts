@@ -1,7 +1,9 @@
 export interface ISearchSpfxWebPartProps {
-  description: string;
+  title: string;
   query?: string;
   sorting?: string;
   template?: string;
   maxResults?: number;
+  external?: boolean;
+  externalUrl?: string;
 }

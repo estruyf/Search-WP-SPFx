@@ -1,18 +1,18 @@
-/* tslint:disable:no-unused-variable */
 import * as React from 'react';
-/* tslint:disable:no-unused-variable */
-
 import { ISearchSpfxWebPartProps } from '../ISearchSpfxWebPartProps';
 import { IWebPartContext } from '@microsoft/sp-client-preview';
 
 import searchActions from '../flux/actions/searchActions';
 import searchStore from '../flux/stores/searchStore';
 
+import { IExternalTemplate } from '../utils/ITemplates';
+
 import TemplateLoader from '../templates/TemplateLoader';
 
 export interface ISearchSpfxProps extends ISearchSpfxWebPartProps {
 	context: IWebPartContext;
 	firstRender: Boolean;
+	externalTemplate?: IExternalTemplate;
 }
 
 export interface ISearchState {
@@ -37,17 +37,21 @@ export default class SearchSpfx extends React.Component<ISearchSpfxProps, ISearc
 	};
 
 	public componentWillMount(): void {
-		this.loader.getComponent(this.props.template).then((component) => {
-			this.setState({
-				template: this.props.template,
-				component: component
+		// Check if rendering is done from an external template
+		if (typeof this.props.externalTemplate !== 'undefined') {
+			// Loading internal template
+			this.loader.getComponent(this.props.template).then((component) => {
+				this.setState({
+					template: this.props.template,
+					component: component
+				});
 			});
-		});
+		}
 	}
 
     public componentDidMount(): void {
         searchStore.addChangeListener(this._onChange);
-		searchActions.get(this.props.context, this.props.query, this.props.maxResults, this.props.sorting, this.loader.getTemplateMappings(this.props.template));
+		this._getResults(this.props);
     }
 
     public componentWillUnmount(): void {
@@ -56,12 +60,20 @@ export default class SearchSpfx extends React.Component<ISearchSpfxProps, ISearc
 
 	public componentWillReceiveProps(nextProps: ISearchSpfxProps): void {
 		// Get the new results
-		searchActions.get(nextProps.context, nextProps.query, nextProps.maxResults, nextProps.sorting, this.loader.getTemplateMappings(nextProps.template));
+		this._getResults(nextProps);
+	}
+
+	private _getResults(crntProps: ISearchSpfxProps): void {
+		if (typeof crntProps.externalTemplate !== 'undefined') {
+			searchActions.get(crntProps.context, crntProps.query, crntProps.maxResults, crntProps.sorting, crntProps.externalTemplate.properties.mappings);
+		} else {
+			searchActions.get(crntProps.context, crntProps.query, crntProps.maxResults, crntProps.sorting, this.loader.getTemplateMappings(crntProps.template));
+		}
 	}
 
 	private _onChange(): void {
 		// Check if another template needs to be loaded
-		if (this.state.template !== this.props.template) {
+		if (typeof this.props.externalTemplate === 'undefined' && this.state.template !== this.props.template) {
 			this.loader.getComponent(this.props.template).then((component) => {
 				this.setState({
 					template: this.props.template,
@@ -86,7 +98,13 @@ export default class SearchSpfx extends React.Component<ISearchSpfxProps, ISearc
 				);
 			} else {
 				// Load the template
-				if (this.state.component !== null) {
+				if (typeof this.props.externalTemplate !== 'undefined') {
+					/* tslint:disable:variable-name */
+					const CrntComponent: any = this.props.externalTemplate.component;
+					/* tslint:disable:variable-name */
+					return <CrntComponent {...this.props} results={this.state.results} />;
+				}
+				else if (this.state.component !== null) {
 					/* tslint:disable:variable-name */
 					const CrntComponent: any = this.state.component;
 					/* tslint:disable:variable-name */

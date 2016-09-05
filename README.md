@@ -7,7 +7,15 @@ All templates need to be created in the `src/webparts/searchSpfx/templates` fold
 
 ```{ key: 'DefaultTemplate', text: 'Default template', mappings: 'Path,Title' }```
 
-![Search web part sample](https://github.com/estruyf/Search-WP-SPFx/blob/master/images/search-wp-spfx-updates-UI.gif?raw=true)
+![Search web part sample](https://github.com/estruyf/Search-WP-SPFx/blob/master/images/search-wp-spfx-external-template.gif?raw=true)
+
+## Versions
+### 0.0.2
+- Added the ability to use external templates. You can find an example template in the [**external_templates**](https://github.com/estruyf/Search-WP-SPFx/tree/master/external_templates) folder
+- Added token handling for the query. Currenlty it supports {Site} -> current site URL and {SiteCollection} -> site collection URL.
+
+### 0.0.1
+- Initial upload
 
 ## Using this web part
 *Info: This web part can only be tested on a developer site at the moment. Currently there is no mock store created.*

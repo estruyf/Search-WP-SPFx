@@ -15,7 +15,7 @@ import ModuleLoader from '@microsoft/sp-module-loader';
 import * as strings from 'mystrings';
 import SearchSpfx, { ISearchSpfxProps } from './components/SearchSpfx';
 import { ISearchSpfxWebPartProps } from './ISearchSpfxWebPartProps';
-import { IExternalTemplate } from './utils/ITemplates';
+import { IExternalTemplate, IScripts, IStyles } from './utils/ITemplates';
 import { allTemplates } from './templates/TemplateLoader';
 
 // Expose React to window -> required for external template loading
@@ -39,13 +39,47 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 		});
 	}
 
+	private _loadScriptsBeforeRender(scriptsToLoad?: IScripts[]): Promise<any> {
+		return new Promise<any>((resolve, reject) => {
+			let promises = [];
+			scriptsToLoad.forEach(script => {
+				promises.push(ModuleLoader.loadScript(script.url, script.funcName));
+			});
+			Promise.all(promises).then(data => {
+				resolve(data);
+			}).catch(err => {
+				reject(err);
+			});
+		});
+	}
+
+	private _loadStyles(stylesToLoad: IStyles[]): void {
+		stylesToLoad.forEach(style => {
+			ModuleLoader.loadCss(style.url);
+		});
+	}
+
 	public render(): void {
 		if (this.properties.external) {
 			// Loading external template
 			ModuleLoader.loadScript(this.properties.externalUrl, "externalTemplate").then((externalTemplate: IExternalTemplate): void => {
-				// Rendering from the external template
-				const element = this._getElement(externalTemplate);
-				ReactDom.render(element, this.domElement);
+				// Check if other scripts have to be loaded before rendering the component
+				if (typeof externalTemplate.properties.scripts !== 'undefined') {
+					this._loadScriptsBeforeRender(externalTemplate.properties.scripts).then(() => {
+						// Rendering from the external template
+						const element = this._getElement(externalTemplate);
+						ReactDom.render(element, this.domElement);
+					});
+				} else {
+					// Rendering from the external template
+					const element = this._getElement(externalTemplate);
+					ReactDom.render(element, this.domElement);
+				}
+
+				// Check if their are any styles that need to be loaded
+				if (typeof externalTemplate.properties.styles !== 'undefined') {
+					this._loadStyles(externalTemplate.properties.styles);
+				}
 			}).catch((error) => {
 				console.log('ERROR: ', error);
 			});

@@ -10,6 +10,9 @@ All templates need to be created in the `src/webparts/searchSpfx/templates` fold
 ![Search web part sample](https://github.com/estruyf/Search-WP-SPFx/blob/master/images/search-wp-spfx-external-template.gif?raw=true)
 
 ## Versions
+### 0.0.3
+- Added the functionality to define scripts and stylesheets to load from an external template. You can find a sample template in the [**external_templates**](https://github.com/estruyf/Search-WP-SPFx/tree/master/external_templates) folder.
+
 ### 0.0.2
 - Added the ability to use external templates. You can find an example template in the [**external_templates**](https://github.com/estruyf/Search-WP-SPFx/tree/master/external_templates) folder
 - Added token handling for the query. Currenlty it supports {Site} -> current site URL and {SiteCollection} -> site collection URL.

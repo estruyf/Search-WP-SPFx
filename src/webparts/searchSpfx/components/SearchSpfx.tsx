@@ -109,6 +109,8 @@ export default class SearchSpfx extends React.Component<ISearchSpfxProps, ISearc
 					const CrntComponent: any = this.state.component;
 					/* tslint:disable:variable-name */
 					return <CrntComponent {...this.props} results={this.state.results} />;
+				} else {
+					return (<div />);
 				}
 			}
 		} else {

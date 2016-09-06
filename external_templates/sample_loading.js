@@ -2,13 +2,26 @@ var externalTemplate = (function() {
     var properties = {
             key: 'SampleTemplate',
             text: 'Sample template',
-            mappings: 'Path,Title,Filename'
+            mappings: 'Path,Title,Filename,ModifiedOWSDATE',
+            scripts: [{
+                url: 'https://code.jquery.com/jquery-3.1.0.js',
+                name: 'jQuery'
+            }],
+            styles: [{
+                url: '<your-site-url>/sample_style.css'
+            }]
         },
         component = React.createClass({
             displayName: 'Component',
 
+            componentDidMount: function() {
+                jQuery(function() {
+                    var elm = jQuery('h1');
+                    elm.text(elm.text() + ' - updated with jQuery').css('color', '#c00000');
+                });
+            },
+
             render: function render() {
-                console.log(this.props.results);
                 return React.createElement(
                     "div",
                     null,
@@ -20,10 +33,10 @@ var externalTemplate = (function() {
                     this.props.results.map(function (result, index) {
                         return React.createElement(
                             "p",
-                            null,
+                            { key: index, className: "my-sample-template" },
                             React.createElement(
                                 "a",
-                                { key: index, href: result.Path },
+                                { href: result.Path },
                                 result.Title
                             )
                         );

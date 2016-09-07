@@ -10,6 +10,10 @@ All templates need to be created in the `src/webparts/searchSpfx/templates` fold
 ![Search web part sample](https://github.com/estruyf/Search-WP-SPFx/blob/master/images/search-wp-spfx-external-template.gif?raw=true)
 
 ## Versions
+### 0.0.4
+- Changed the way of loading scripts defined in external templates
+- Added a carousel sample template which makes use of jQuery and Cycle2. Template can be found in the [**external_templates**](https://github.com/estruyf/Search-WP-SPFx/tree/master/external_templates) folder.
+
 ### 0.0.3
 - Added the functionality to define scripts and stylesheets to load from an external template. You can find a sample template in the [**external_templates**](https://github.com/estruyf/Search-WP-SPFx/tree/master/external_templates) folder.
 

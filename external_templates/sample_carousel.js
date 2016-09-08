@@ -1,7 +1,7 @@
 var externalTemplate = (function() {
     var properties = {
-            key: 'SampleTemplate',
-            text: 'Sample template',
+            key: 'CarouselTemplate',
+            text: 'Carousel template',
             mappings: 'Path,Title,Filename,PictureThumbnailURL',
             scripts: [{
                 url: 'https://code.jquery.com/jquery-1.12.4.min.js',

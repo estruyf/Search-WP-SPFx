@@ -77,11 +77,11 @@ export class SearchStoreStatic extends EventEmitter {
 	 * @param {string} query
 	 */
 	public ReplaceTokens (query: string, context: IWebPartContext): string {
-		if (query.indexOf("{Site}") !== -1) {
-			query = query.replace("{Site}", context.pageContext.web.absoluteUrl);
+		if (query.toLowerCase().indexOf("{site}") !== -1) {
+			query = query.replace(/{site}/ig, context.pageContext.web.absoluteUrl);
 		}
-		if (query.indexOf("{SiteCollection}") !== -1) {
-			query = query.replace("{SiteCollection}", _spPageContextInfo.siteAbsoluteUrl);
+		if (query.toLowerCase().indexOf("{sitecollection}") !== -1) {
+			query = query.replace(/{sitecollection}/ig, _spPageContextInfo.siteAbsoluteUrl);
 		}
 		return query;
 	}

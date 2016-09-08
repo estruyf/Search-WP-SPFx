@@ -3,9 +3,11 @@ Search Web Part built with the SharePoint Framework, React and Flux.
 
 In the properties pane you can specify the query and template you want to use.
 
-All templates need to be created in the `src/webparts/searchSpfx/templates` folder. Start with a copy of one of the existing ones. The Managed Properties you want to use need to be specified in the **TemplateLoader.ts** file and should be provided in the following format:
+All "Internal" templates need to be created in the `src/webparts/searchSpfx/templates` folder. Start with a copy of one of the existing ones. The Managed Properties you want to use need to be specified in the **TemplateLoader.ts** file and should be provided in the following format:
 
 ```{ key: 'DefaultTemplate', text: 'Default template', mappings: 'Path,Title' }```
+
+Since version 0.0.2 you have the ability to make use of "external" templates. These templates are JS files which you load from an URL. If you want to test out this functionality, navigate to the external_templates folder and upload one of these files to your SharePoint environment. Once uploaded, copy the URL of the file and specify it in the external URL settings property.
 
 ![Search web part sample](https://github.com/estruyf/Search-WP-SPFx/blob/master/images/search-wp-spfx-external-template.gif?raw=true)
 

@@ -1,7 +1,7 @@
 var externalTemplate = (function() {
     var properties = {
-            key: 'SampleTemplate',
-            text: 'Sample template',
+            key: 'jQueryTemplate',
+            text: 'jQuery template',
             mappings: 'Path,Title,Filename,ModifiedOWSDATE',
             scripts: [{
                 url: 'https://code.jquery.com/jquery-3.1.0.js',

@@ -10,6 +10,10 @@ define([], function() {
     "FieldsSorting": "Sorting (MP:ascending or descending) - example: lastmodifiedtime:ascending,author:descending",
     "QueryInfoDescription": "You can make use of following tokens: {Site} - {SiteCollection}",
     "FieldsExternalLabel": "Do you want to use an external template?",
-    "FieldsExternalTempLabel": "Specify the URL of the external template"
+    "FieldsExternalTempLabel": "Specify the URL of the external template",
+    "TemplateGroupName": "Template settings",
+    "LoggingGroupName": "Logging pane",
+    "LoggingFieldLabel": "Logging search API calls",
+    "LoggingFieldDescription": "This field logs all search API calls"
   }
 });

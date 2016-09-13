@@ -9,18 +9,25 @@ All "Internal" templates need to be created in the `src/webparts/searchSpfx/temp
 
 Since version 0.0.2 you have the ability to make use of "external" templates. These templates are JS files which you load from an URL. If you want to test out this functionality, navigate to the external_templates folder and upload one of these files to your SharePoint environment. Once uploaded, copy the URL of the file and specify it in the external URL settings property.
 
-![Search web part sample](https://github.com/estruyf/Search-WP-SPFx/blob/master/images/search-wp-spfx-external-template.gif?raw=true)
+![Search web part sample](./images/search-wp-spfx-external-template.gif)
 
 ## Versions
+### 0.0.5
+- Added a new logging field to the property pane. Every time you apply a new configuration to your web part, the logging pane shows the search API URL which has been called and the response.
+
+![Search logging pane](./images/search-wp-spfx-logging.gif)
+
+The code of this logging field can be found on the following repo: [custom fields for SPFx](https://github.com/estruyf/custom-fields-spfx)
+
 ### 0.0.4
 - Changed the way of loading scripts defined in external templates
-- Added a carousel sample template which makes use of jQuery and Cycle2. Template can be found in the [**external_templates**](https://github.com/estruyf/Search-WP-SPFx/tree/master/external_templates) folder.
+- Added a carousel sample template which makes use of jQuery and Cycle2. Template can be found in the [**external_templates**](./external_templates) folder.
 
 ### 0.0.3
-- Added the functionality to define scripts and stylesheets to load from an external template. You can find a sample template in the [**external_templates**](https://github.com/estruyf/Search-WP-SPFx/tree/master/external_templates) folder.
+- Added the functionality to define scripts and stylesheets to load from an external template. You can find a sample template in the [**external_templates**](./external_templates) folder.
 
 ### 0.0.2
-- Added the ability to use external templates. You can find an example template in the [**external_templates**](https://github.com/estruyf/Search-WP-SPFx/tree/master/external_templates) folder
+- Added the ability to use external templates. You can find an example template in the [**external_templates**](./external_templates) folder
 - Added token handling for the query. Currenlty it supports {Site} -> current site URL and {SiteCollection} -> site collection URL.
 
 ### 0.0.1

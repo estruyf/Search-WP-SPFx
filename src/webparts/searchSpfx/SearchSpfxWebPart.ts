@@ -10,6 +10,8 @@ import {
 	PropertyPaneToggle
 } from '@microsoft/sp-client-preview';
 
+import { PropertyPaneLoggingField } from './PropertyPaneControls/PropertyPaneLoggingField';
+
 import ModuleLoader from '@microsoft/sp-module-loader';
 
 import * as strings from 'mystrings';
@@ -19,12 +21,16 @@ import { IExternalTemplate, IScripts, IStyles } from './utils/ITemplates';
 import { defer, IDeferred } from './utils/defer';
 import { allTemplates } from './templates/TemplateLoader';
 
+// Import the search store, needed for logging the search requests
+import searchStore from './flux/stores/searchStore';
+
 // Expose React to window -> required for external template loading
 require("expose?React!react");
 
 export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfxWebPartProps> {
 	private crntExternalTemplateUrl: string = "";
 	private crntExternalTemplate: IExternalTemplate = null;
+	private onChangeBinded: boolean = false;
 
 	public constructor(context: IWebPartContext) {
 		super(context);
@@ -177,6 +183,14 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 			});
 		}
 
+		// Refresh the property pane when search rest call is completed
+		if (!this.onChangeBinded) {
+			this.onChangeBinded = true;
+			searchStore.addChangeListener(() => {
+				this.configureStart(true);
+			});
+		}
+
 		return {
 			pages: [{
 				header: {
@@ -200,15 +214,37 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 						}),
 						PropertyPaneTextField('sorting', {
 							label: strings.FieldsSorting
-						}),
+						})
+					]
+				}, {
+					groupName: strings.TemplateGroupName,
+					groupFields: [
 						PropertyPaneToggle('external', {
 							label: strings.FieldsExternalLabel
 						}),
 						templateProperty
 					]
-				}]
+				}, {
+					groupName: strings.LoggingGroupName,
+					groupFields: [
+						PropertyPaneLoggingField({
+							label: strings.LoggingFieldLabel,
+							description: strings.LoggingFieldDescription,
+							value: searchStore.getLoggingInfo(),
+							retrieve: this.getLogging
+						})
+					]
+				}],
+				displayGroupsAsAccordion: true
 			}]
 		};
+	}
+
+	/**
+	 * Function to retrieve the logging value from the store
+	 */
+	private getLogging(): any {
+		return searchStore.getLoggingInfo();
 	}
 
 	/**

@@ -12,6 +12,9 @@ Since version 0.0.2 you have the ability to make use of "external" templates. Th
 ![Search web part sample](./images/search-wp-spfx-external-template.gif)
 
 ## Versions
+### 0.0.6
+- Added the following tokens that you can use for your queries: {Today}, {Today+Number}, {Today-Number}, {CurrentDisplayLanguage}, {User}, {User.Name}, {User.Email}.
+
 ### 0.0.5
 - Added a new logging field to the property pane. Every time you apply a new configuration to your web part, the logging pane shows the search API URL which has been called and the response.
 

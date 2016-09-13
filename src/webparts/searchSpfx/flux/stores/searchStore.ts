@@ -1,12 +1,10 @@
 import appDispatcher from '../dispatcher/appDispatcher';
 import searchActionIDs from '../actions/searchActionIDs';
+import SearchTokenHelper from '../helpers/SearchTokenHelper';
 import { EventEmitter } from 'events';
 
 import { IWebPartContext } from '@microsoft/sp-client-preview';
 import { ISearchResults, ICells, ICellValue } from '../../utils/ISearchResults';
-import { IPageContext } from '../../utils/IPageContext';
-
-declare const _spPageContextInfo: IPageContext;
 
 const CHANGE_EVENT: string = 'change';
 
@@ -76,19 +74,6 @@ export class SearchStoreStatic extends EventEmitter {
 	}
 
 	/**
-	 * @param {string} query
-	 */
-	public ReplaceTokens (query: string, context: IWebPartContext): string {
-		if (query.toLowerCase().indexOf("{site}") !== -1) {
-			query = query.replace(/{site}/ig, context.pageContext.web.absoluteUrl);
-		}
-		if (query.toLowerCase().indexOf("{sitecollection}") !== -1) {
-			query = query.replace(/{sitecollection}/ig, _spPageContextInfo.siteAbsoluteUrl);
-		}
-		return query;
-	}
-
-	/**
 	 * @param {string} value
 	 */
 	public isEmptyString (value: string): boolean {
@@ -120,9 +105,10 @@ const searchStore: SearchStoreStatic = new SearchStoreStatic();
 appDispatcher.register((action) => {
 	switch (action.actionType) {
 		case searchActionIDs.SEARCH_GET:
+			const tokenHelper = new SearchTokenHelper();
 			let url: string = action.context.pageContext.web.absoluteUrl + "/_api/search/query?querytext=";
 			// Check if a query is provided
-			url += !searchStore.isEmptyString(action.query) ? `'${searchStore.ReplaceTokens(action.query, action.context)}'` : "'*'";
+			url += !searchStore.isEmptyString(action.query) ? `'${tokenHelper.replaceTokens(action.query, action.context)}'` : "'*'";
 			// Check if there are fields provided
 			url += '&selectproperties=';
 			url += !searchStore.isEmptyString(action.fields) ? `'${action.fields}'` : "'path,title'";

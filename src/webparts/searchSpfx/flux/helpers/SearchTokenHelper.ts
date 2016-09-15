@@ -13,7 +13,7 @@ export default class SearchTokenHelper {
     public replaceTokens(restUrl: string, context: IWebPartContext): string {
         const tokens = restUrl.match(this.regexVal);
 
-        if (tokens.length > 0) {
+        if (tokens !== null && tokens.length > 0) {
             tokens.forEach((token) => {
                 // Check which token has been retrieved
                 if (token.toLowerCase().indexOf('today') !== -1) {

@@ -12,6 +12,10 @@ Since version 0.0.2 you have the ability to make use of "external" templates. Th
 ![Search web part sample](./images/search-wp-spfx-external-template.gif)
 
 ## Versions
+### 0.0.7
+- Bug fix in token helper
+- Updated to drop 3 of #SPFx
+
 ### 0.0.6
 - Added the following tokens that you can use for your queries: {Today}, {Today+Number}, {Today-Number}, {CurrentDisplayLanguage}, {User}, {User.Name}, {User.Email}.
 

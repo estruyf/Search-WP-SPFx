@@ -31,9 +31,14 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 	private crntExternalTemplateUrl: string = "";
 	private crntExternalTemplate: IExternalTemplate = null;
 	private onChangeBinded: boolean = false;
+	private removeChangeBinding: NodeJS.Timer = null;
 
 	public constructor(context: IWebPartContext) {
 		super(context);
+
+		// Bind this to the setLogging method
+		this.setLogging = this.setLogging.bind(this);
+		this.removeLogging = this.removeLogging.bind(this);
 	}
 
 	/**
@@ -165,6 +170,26 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 		}
 	}
 
+	protected onPropertyPaneRendered(): void {
+		// Clear remove binding timeout. This is necessary if user applied a new configuration.
+		if (this.removeChangeBinding !== null) {
+			clearTimeout(this.removeChangeBinding);
+			this.removeChangeBinding = null;
+		}
+		// Check if there is a change binding in place
+		if (!this.onChangeBinded) {
+			this.onChangeBinded = true;
+			searchStore.addChangeListener(this.setLogging);
+		}
+	}
+
+
+	// Will probably be renamed to onPropertyConfigurationComplete in the next drop
+	protected onPropertyPaneConfigurationComplete() {
+		// Remove the change binding
+		this.removeChangeBinding = setTimeout(this.removeLogging, 500);
+	}
+
 	/**
 	 * Property pane settings
 	 */
@@ -180,14 +205,6 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 			// Show the external URL property instead of the internal template property
 			templateProperty = PropertyPaneTextField('externalUrl', {
 				label: strings.FieldsExternalTempLabel
-			});
-		}
-
-		// Refresh the property pane when search rest call is completed
-		if (!this.onChangeBinded) {
-			this.onChangeBinded = true;
-			searchStore.addChangeListener(() => {
-				this.configureStart(true);
 			});
 		}
 
@@ -245,6 +262,24 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 	 */
 	private getLogging(): any {
 		return searchStore.getLoggingInfo();
+	}
+
+	/**
+	 * Function to refresh the property pane when a change is retrieved from the store
+	 */
+	private setLogging(): void {
+		// Refresh the property pane when search rest call is completed
+		this.configureStart(true);
+	}
+
+	/**
+	 * Function to remove the change binding when property pane is closed
+	 */
+	private removeLogging(): void {
+		if (this.onChangeBinded) {
+			this.onChangeBinded = false;
+			searchStore.removeChangeListener(this.setLogging);
+		}
 	}
 
 	/**

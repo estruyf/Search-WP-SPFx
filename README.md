@@ -9,6 +9,8 @@ All "Internal" templates need to be created in the `src/webparts/searchSpfx/temp
 
 Since version 0.0.2 you have the ability to make use of "external" templates. These templates are JS files which you load from an URL. If you want to test out this functionality, navigate to the external_templates folder and upload one of these files to your SharePoint environment. Once uploaded, copy the URL of the file and specify it in the external URL settings property.
 
+> There is a sample project which you can use to create your own external templates. You can find it here: [Search WP SPFx Template Generator](https://github.com/estruyf/search-wp-spfx-templategenerator).
+
 ![Search web part sample](./images/search-wp-spfx-external-template.gif)
 
 ## Versions

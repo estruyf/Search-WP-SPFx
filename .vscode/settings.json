@@ -17,5 +17,9 @@
     "lib-amd": true,
     "lib": true,
     "temp": true
+  },
+
+  "files.exclude": {
+      "node_modules": true
   }
 }

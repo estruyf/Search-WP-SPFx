@@ -8,7 +8,7 @@ import {
 	PropertyPaneDropdown,
 	PropertyPaneSlider,
 	PropertyPaneToggle
-} from '@microsoft/sp-client-preview';
+} from '@microsoft/sp-webpart-base';
 
 import { PropertyPaneLoggingField } from './PropertyPaneControls/PropertyPaneLoggingField';
 
@@ -190,6 +190,21 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 		this.removeChangeBinding = setTimeout(this.removeLogging, 500);
 	}
 
+	// protected onPropertyPaneConfigurationStart() {
+	// 	// Will probably be deleted in the next drop
+	// 	console.log('onPropertyPaneConfigurationStart');
+	// }
+
+	// protected onAfterPropertyPaneChangesApplied() {
+	// 	// Will probably be deleted in the next drop
+	// 	console.log('onAfterPropertyPaneChangesApplied');
+	// }
+
+	// Will probably be added in the next drop
+	// protected onPropertyPaneSave() {
+	// 	console.log('onPropertyPaneSave');
+	// }
+
 	/**
 	 * Property pane settings
 	 */
@@ -216,9 +231,6 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 				groups: [{
 					groupName: strings.BasicGroupName,
 					groupFields: [
-						PropertyPaneTextField('title', {
-							label: strings.FieldsTitleLabel
-						}),
 						PropertyPaneTextField('query', {
 							label: strings.QueryFieldLabel,
 							description: strings.QueryInfoDescription,
@@ -236,6 +248,9 @@ export default class SearchSpfxWebPart extends BaseClientSideWebPart<ISearchSpfx
 				}, {
 					groupName: strings.TemplateGroupName,
 					groupFields: [
+						PropertyPaneTextField('title', {
+							label: strings.FieldsTitleLabel
+						}),
 						PropertyPaneToggle('external', {
 							label: strings.FieldsExternalLabel
 						}),

@@ -5,6 +5,6 @@
     "version": "1.0.0.0"
   },
   "paths": {
-    "zippedPackage": "search-wp-spfx.spapp"
+    "zippedPackage": "search-wp-spfx.sppkg"
   }
 }

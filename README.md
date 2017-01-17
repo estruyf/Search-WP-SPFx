@@ -14,6 +14,9 @@ Since version 0.0.2 you have the ability to make use of "external" templates. Th
 ![Search web part sample](./images/search-wp-spfx-external-template.gif)
 
 ## Versions
+### 0.1.0
+- Updated to support RC0 of #SPFx
+
 ### 0.0.8
 - Updated to drop 5 of #SPFx
 

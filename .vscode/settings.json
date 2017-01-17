@@ -22,4 +22,6 @@
   "files.exclude": {
       "node_modules": true
   }
+,
+"typescript.check.workspaceVersion": false
 }

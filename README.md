@@ -1,4 +1,4 @@
-# Importante: Be sure to check out the new version of the web part which makes use of Handlebars templating engine.
+# Important: Be sure to check out the new version of the web part which makes use of Handlebars templating engine.
 
 **You can find it here: [https://github.com/estruyf/react-handlebars-search](https://github.com/estruyf/react-handlebars-search).**
 
